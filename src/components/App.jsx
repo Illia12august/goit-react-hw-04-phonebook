@@ -12,7 +12,18 @@ export class App extends Component {
     ],
     filter: '',
   };
-
+  componentDidMount() {
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts !== null) {
+      const contacts = JSON.parse(savedContacts);
+      this.setState({ contacts });
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
   handleAddBook = newContact => {
     if (this.handleExists(newContact.name)) {
       alert('Contact with this name already exists!');
