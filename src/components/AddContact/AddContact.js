@@ -1,9 +1,14 @@
 import { nanoid } from 'nanoid';
 import { Formik } from 'formik';
-import { Component } from 'react';
 
 import * as Yup from 'yup';
-import { AddContactBtn, Container, InputEl, StyledError, StyledForm } from './AddContact.styled';
+import {
+  AddContactBtn,
+  Container,
+  InputEl,
+  StyledError,
+  StyledForm,
+} from './AddContact.styled';
 const contactValidation = Yup.object().shape({
   name: Yup.string()
     .min(2, 'Too short!')
@@ -14,27 +19,27 @@ const contactValidation = Yup.object().shape({
     .max(9, 'Too Long!')
     .required('Required'),
 });
-export default class AddContact extends Component {
-  addContactInComponent = (values, act) => {
+export const AddContact = ({addContact}) => {
+
+  const addContactInComponent = (values, act) => {
     const newContact = {
       id: nanoid(),
       name: values.name,
       number: values.phoneNumber,
     };
-    this.props.addContact(newContact);
+    addContact(newContact);
 
     act.resetForm();
   };
-  render() {
-    return (
-      <Formik
-        initialValues={{ name: '', phoneNumber: '' }}
-        onSubmit={this.addContactInComponent}
-        validationSchema={contactValidation}
-      >
-        {({ isSubmitting }) => (
-          <StyledForm>
-            <Container>
+  return (
+    <Formik
+      initialValues={{ name: '', phoneNumber: '' }}
+      onSubmit={addContactInComponent}
+      validationSchema={contactValidation}
+    >
+      {({ isSubmitting }) => (
+        <StyledForm>
+          <Container>
             <label>Name</label>
             <InputEl type="text" name="name" placeholder="Ariana Grande" />
             <StyledError name="name" />
@@ -44,10 +49,9 @@ export default class AddContact extends Component {
             <AddContactBtn type="submit" disabled={isSubmitting}>
               Add contact
             </AddContactBtn>
-            </Container>
-          </StyledForm>
-        )}
-      </Formik>
-    );
-  }
-}
+          </Container>
+        </StyledForm>
+      )}
+    </Formik>
+  );
+};
